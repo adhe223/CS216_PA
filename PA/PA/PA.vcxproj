@@ -10,6 +10,17 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\DungeonLevel.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\Floor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\main.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\Tile.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\DungeonLevel.h" />
+    <ClInclude Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\Floor.h" />
+    <ClInclude Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\Tile.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{720E294C-7E9C-43D3-9F91-8B3621C66F36}</ProjectGuid>
     <RootNamespace>PA</RootNamespace>
@@ -63,17 +74,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\DungeonLevel.cpp" />
-    <ClCompile Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\Floor.cpp" />
-    <ClCompile Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\main.cpp" />
-    <ClCompile Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\Tile.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\DungeonLevel.h" />
-    <ClInclude Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\Floor.h" />
-    <ClInclude Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\Tile.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

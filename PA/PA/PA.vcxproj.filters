@@ -15,27 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\Tile.cpp">
+    <ClCompile Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\Tile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\DungeonLevel.cpp">
+    <ClCompile Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\DungeonLevel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\Floor.cpp">
+    <ClCompile Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\Floor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\main.cpp">
+    <ClCompile Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\DungeonLevel.h">
+    <ClInclude Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\Floor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\Floor.h">
+    <ClInclude Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\Tile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\PA\PA\Tile.h">
+    <ClInclude Include="..\..\..\..\..\..\Alex%27s Documents\Github\CS216 PA\CS216_PA\PA\PA\DungeonLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

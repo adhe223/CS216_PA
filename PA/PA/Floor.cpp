@@ -1,6 +1,7 @@
 #include <ostream>
 #include <random>
 #include <ctime>
+#include <iostream>
 #include "Floor.h"
 #include "Tile.h"
 using namespace std;
@@ -170,7 +171,6 @@ void Floor::drawRooms()
 				vMap[row][col]->setSymbol('.');
 			}
 		}
-
 	}
 }
 
@@ -194,22 +194,44 @@ void Floor::drawStairs()
 		{
 			//Now check the 8 surrounding tiles for tunnels
 			bool bIsTunnel = false;
-			for (int j = row - 1; j <= row + 1; j++)
+
+			//Use a counter so we can control the break and protect against out of bounds indices access
+			int outCounter = 0;
+			int j = row - 1;
+			while (outCounter <= 3)
 			{
-				for (int i = col - 1; i <= col + 1; i++)
+				//Need to make sure we don't check out of bounds indices
+				if (j < 0) {j = 0; outCounter++;}
+				else if (j >= iHeight) {j = iHeight - 1; outCounter++;}
+
+				//Use a counter so we can control the break and protect against out of bounds indices access
+				int inCounter = 0;
+				int i = col - 1;
+				while (inCounter <= 3)
 				{
+					//Need to make sure we don't check out of bounds indices
+					if (i < 0) {i = 0; inCounter++;}
+					else if (i >= iWidth) {i = iWidth - 1; inCounter++;}
+
 					if (vMap[j][i]->getSymbol() == '#') {bIsTunnel = true;}
+					i++;
+					inCounter++;
 				}
+
+				j++;
+				outCounter++;
 			}
 
 			//Place the up stairs if there was not a tunnel
 			if (!bIsTunnel) {vMap[row][col]->setSymbol('>'); uPlaced = true;}
 		}
+
+		
 	}
 
-	//Now see if downstairs are necessary, if so, place
+	//Now see if downstairs are necessary, if so, place (for PA2 we always place them, so make bDown true)
 	bool bDown = true;		//If we need stairs down
-	if (iFloor == iNumFloors - 1) {bDown = false;}
+	//if (iFloor == iNumFloors - 1) {bDown = false;}
 
 	if (bDown)
 	{
@@ -227,12 +249,33 @@ void Floor::drawStairs()
 			{
 				//Now check the 8 surrounding tiles for tunnels
 				bool bIsTunnel = false;
-				for (int j = row - 1; j <= row + 1; j++)
+
+				//Use a counter so we can control the break and protect against out of bounds indices access
+				int outCounter = 0;
+				int j = row - 1;
+				while (outCounter <= 3)
 				{
-					for (int i = col - 1; i <= col + 1; i++)
+					//Need to make sure we don't check out of bounds indices
+					if (j < 0) {j = 0; outCounter++;}
+					else if (j >= iHeight) {j = iHeight - 1; outCounter++;}
+
+					//Use a counter so we can control the break and protect against out of bounds indices access
+					int inCounter = 0;
+					int i = col - 1;
+					while (inCounter <= 3)
 					{
+						//Need to make sure we don't check out of bounds indices
+						if (i < 0) {i = 0; inCounter++;}
+						else if (i >= iWidth) {i = iWidth - 1; inCounter++;}
+						
 						if (vMap[j][i]->getSymbol() == '#') {bIsTunnel = true;}
+
+						i++;
+						inCounter++;
 					}
+
+					j++;
+					outCounter++;
 				}
 
 				//Make sure there isn't other stairs there
