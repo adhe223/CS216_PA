@@ -18,11 +18,12 @@ Floor::Floor(int floor, int numFloors, int floorWidth, int floorHeight)
 	iSectorHeight = iHeight/iSectorHigh;
 	iSectorWidth = iWidth/iSectorWide;
 
-	//Need at least 200 room tiles with 6 rooms. At minimum our rooms should be 200/6 tiles, or 6x6 at least.
-	//Max room size will be 22 wide x 6 high (fills sector with room for two space on each side)
-	iMinRoomSide = 6;
-	iMaxRoomWidth = 22;
-	iMaxRoomHeight = 6;
+	//Need at least 200 room tiles with 6 rooms. At minimum our rooms should be 200/6 tiles, or 7x5 at least.
+	//Max room size will be 24 wide x 8 high (fills sector with room for one space on each side)
+	iMinRoomWidth = 7;
+	iMinRoomHeight = 5;
+	iMaxRoomWidth = 24;
+	iMaxRoomHeight = 8;
 
 	drawBlank();
 	drawTunnel();
@@ -119,8 +120,8 @@ void Floor::drawRooms()
 		}
 
 		//Randomly choose the size of the room
-		int iRoomW = (mt() % (iMaxRoomWidth + 1 - iMinRoomSide)) + iMinRoomSide;
-		int iRoomH = (mt() % (iMaxRoomHeight + 1 - iMinRoomSide)) + iMinRoomSide;
+		int iRoomW = (mt() % (iMaxRoomWidth + 1 - iMinRoomWidth)) + iMinRoomWidth;
+		int iRoomH = (mt() % (iMaxRoomHeight + 1 - iMinRoomHeight)) + iMinRoomHeight;
 
 		//We will use a brute force method here because it allows for more randomness in room placement
 		//Randomly place the top left corner of the room into the sector, then check if it is on the path. We do
@@ -128,7 +129,7 @@ void Floor::drawRooms()
 		//in the sector. Will create vectors for the possible rows and possible cols it can start at.
 		vector<int> vPossRow;
 		int j = 0;
-		while (j + iRoomH + 2 < iSectorHeight)		//+2 is to ensure rooms don't collide (with walls if I choose to)
+		while (j + iRoomH + 1 < iSectorHeight)		//+1 is to ensure rooms don't collide
 		{
 			if (sector - 3 < 0) {vPossRow.push_back(j);}
 			else {vPossRow.push_back(j + iSectorHeight);}
@@ -137,7 +138,7 @@ void Floor::drawRooms()
 
 		vector<int> vPossCol;
 		int i = 0;
-		while (i + iRoomW + 2 < iSectorWidth)	//+2 is to ensure rooms don't collide (with walls if I choose to)
+		while (i + iRoomW + 1 < iSectorWidth)	//+1 is to ensure rooms don't collide
 		{
 			if (sector - 3 < 0) {vPossCol.push_back(i + (sector * iSectorWidth));}
 			else {vPossCol.push_back(i + ((sector - 3) * iSectorWidth));}
@@ -154,7 +155,7 @@ void Floor::drawRooms()
 			iStartCol = vPossCol[mt() % vPossCol.size()];
 
 			//Test if intersects path
-			for (int row = iStartRow; row <= iStartRow + iRoomH; row++)
+			for (int row = iStartRow; row < iStartRow + iRoomH; row++)
 			{
 				for (int col = iStartCol; col < iStartCol + iRoomW; col++)
 				{
@@ -164,9 +165,9 @@ void Floor::drawRooms()
 		}
 
 		//At this point we have a starting position for the room that will be valid, draw the room
-		for (int row = iStartRow; row <= iStartRow + iRoomH; row++)
+		for (int row = iStartRow; row < iStartRow + iRoomH; row++)
 		{
-			for (int col = iStartCol; col <= iStartCol + iRoomW; col++)
+			for (int col = iStartCol; col < iStartCol + iRoomW; col++)
 			{
 				vMap[row][col]->setSymbol('.');
 			}

@@ -31,7 +31,8 @@ private:
 	int iSectorHeight;	//Height of sectors
 	int iSectorWidth;	//Width of sectors
 
-	int iMinRoomSide;	//Smallest square room
+	int iMinRoomWidth; //Smallest Room width
+	int iMinRoomHeight; //Smallest Room height
 	int iMaxRoomWidth;	//Largest width a room can have
 	int iMaxRoomHeight;	//Largest height a room can have
 
