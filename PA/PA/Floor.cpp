@@ -19,10 +19,10 @@ Floor::Floor(int floor, int numFloors, int floorWidth, int floorHeight)
 	iSectorWidth = iWidth/iSectorWide;
 
 	//Need at least 200 room tiles with 6 rooms. At minimum our rooms should be 200/6 tiles, or 6x6 at least.
-	//Max room size will be 24 wide x 8 high (fills sector with room for one space on each side)
+	//Max room size will be 22 wide x 6 high (fills sector with room for two space on each side)
 	iMinRoomSide = 6;
-	iMaxRoomWidth = 24;
-	iMaxRoomHeight = 8;
+	iMaxRoomWidth = 22;
+	iMaxRoomHeight = 6;
 
 	drawBlank();
 	drawTunnel();
@@ -128,7 +128,7 @@ void Floor::drawRooms()
 		//in the sector. Will create vectors for the possible rows and possible cols it can start at.
 		vector<int> vPossRow;
 		int j = 0;
-		while (j + iRoomH + 1 < iSectorHeight)		//+1 is to ensure rooms don't collide
+		while (j + iRoomH + 2 < iSectorHeight)		//+2 is to ensure rooms don't collide (with walls if I choose to)
 		{
 			if (sector - 3 < 0) {vPossRow.push_back(j);}
 			else {vPossRow.push_back(j + iSectorHeight);}
@@ -137,7 +137,7 @@ void Floor::drawRooms()
 
 		vector<int> vPossCol;
 		int i = 0;
-		while (i + iRoomW + 1 < iSectorWidth)	//+1 is to ensure rooms don't collide
+		while (i + iRoomW + 2 < iSectorWidth)	//+2 is to ensure rooms don't collide (with walls if I choose to)
 		{
 			if (sector - 3 < 0) {vPossCol.push_back(i + (sector * iSectorWidth));}
 			else {vPossCol.push_back(i + ((sector - 3) * iSectorWidth));}

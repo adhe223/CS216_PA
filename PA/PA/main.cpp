@@ -248,8 +248,6 @@ bool unitTest(DungeonLevel dl)
 				if (map[row][col]->getSymbol() == '.')
 				{
 					recurseCount(map, row, col, iCount);
-					printMap(map);
-					cout << iCount << endl;
 					if (iCount < 16) {passSize = false;}
 				}
 			}
@@ -257,7 +255,6 @@ bool unitTest(DungeonLevel dl)
 
 		if (!passSize) {passed = false; cout << "Room Size Test Failed: There is less than 16 tiles in at least one room!" << endl;}
 		else {cout << "Room Size Test Passed!" << endl;}
-
 	}
 
 	return passed;
