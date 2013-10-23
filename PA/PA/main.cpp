@@ -123,8 +123,26 @@ void recurseCount(vector<vector<Tile *>> & vMap, int row, int col, int & count)
 	}
 }
 
-void overlapRecurse(vector<vector<Tile *>> & vMap, int row, int col, int & count, int & vIndex, vector<char> & symbols)
+void overlapRecurse(vector<vector<Tile *>> & vMap, int row, int col, int & count, int & vIndex, vector<char> & symbols, int & roomWidth, int & roomHeight)
 {
+	//Initial check on how wide and tall the room is (used for rectangular test)
+	if (roomWidth == 0)
+	{
+		int newCol = col;
+		int newRow = row;
+		while (vMap[row][newCol]->getSymbol() == '.')
+		{
+			roomWidth++;
+			newCol++;
+		}
+
+		while (vMap[newRow][col]->getSymbol() == '.')
+		{
+			roomHeight++;
+			newRow++;
+		}
+	}
+
 	//Ending condition
 	char sym = vMap[row][col]->getSymbol();
 	if (sym == ' ' || sym == '#' || sym == '^' || sym == '_' || sym == symbols[vIndex]) {return;}
@@ -169,7 +187,7 @@ void overlapRecurse(vector<vector<Tile *>> & vMap, int row, int col, int & count
 			else if (i >= 79) {i = 79 - 1; inCounter++;}
 
 			//Call the function recursively
-			if (j != row && i != col) {overlapRecurse(vMap, j, i, count, vIndex, symbols);}
+			if (j != row && i != col) {overlapRecurse(vMap, j, i, count, vIndex, symbols, roomWidth, roomHeight);}
 
 			i++;
 			inCounter++;
@@ -310,7 +328,7 @@ bool unitTest(DungeonLevel dl)
 		if (!passSize) {passed = false; cout << "Room Size Test Failed: There is less than 16 tiles in at least one room!" << endl;}
 		else {cout << "Room Size Test Passed!" << endl;}
 
-		//OVERLAP TEST
+		//OVERLAP TEST AND RECTANGULAR TEST
 		/*This is the most complicated of all the unit tests. The idea is similar to the count algorithm I used in the room size test.
 		The idea is that I will mark a room with a symbol, then use a vector to keep count of the symbol. We will then switch
 		swymbols for the next room to be marked and mark it and count. (will use a vector of size 6 with different symbols and simply iterate
@@ -345,17 +363,28 @@ bool unitTest(DungeonLevel dl)
 		vNewCount.push_back(0);
 		vNewCount.push_back(0);
 		int vIndex = 0;
+		bool isRectangular = true;
 		
 		for (int row = 0; row < map.size(); row++)
 		{
 			for (int col = 0; col < map[row].size(); col++)
 			{
 				int iCount = 0;
-				if (map[row][col]->getSymbol() == '.')
+				int roomWidth = 0;
+				int roomHeight = 0;
+				if (map[row][col]->getSymbol() == '.' || map[row][col]->getSymbol() == '<' || map[row][col]->getSymbol() == '>')
 				{
-					overlapRecurse(map, row, col, iCount, vIndex, symbols);
+					overlapRecurse(map, row, col, iCount, vIndex, symbols, roomWidth, roomHeight);
 					vCount[vIndex] = iCount;
 					vIndex++;
+
+					//Now check if room is rectangular
+					double dCalc = (iCount / roomWidth);
+					double dHeight = roomHeight;
+					if (dCalc != dHeight)
+					{
+						isRectangular = false;
+					}
 				}
 			}
 		}
@@ -392,9 +421,9 @@ bool unitTest(DungeonLevel dl)
 		if (!overlapPass) {passed = false; cout << "Room Overlap Test Failed: One or more rooms overlap each other!" << endl;}
 		else {cout << "Room Overlap Test Passed!" << endl;}
 
-		//RECTANGULAR TEST
-		
-
+		cout << "Rectangular Room Test:" << endl;
+		if (!isRectangular) {passed = false; cout << "Rectangular Room Test Failed: One or more rooms is not rectangular!" << endl;}
+		else {cout << "Rectangular Room Test Passed!" << endl;}
 	}
 
 	return passed;
