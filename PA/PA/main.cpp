@@ -38,6 +38,10 @@ void printMap(vector<vector<Tile *>> & vMap)
 void recurseMark(vector<vector<Tile *>> & vMap, int row, int col)
 {
 	//Ending condition
+	//Check if oob
+	if (row < 0 || col < 0 || row >= vMap.size() || col >= vMap[0].size()) {return;}
+
+	//Check if already marked or space we don't want to mark
 	if (vMap[row][col]->getSymbol() == ' ' || vMap[row][col]->getSymbol() == 'X' || vMap[row][col]->getSymbol() == 'O' || vMap[row][col]->getSymbol() == '^' || vMap[row][col]->getSymbol() == '_') {return;}
 
 	//Mark the tile
@@ -47,42 +51,20 @@ void recurseMark(vector<vector<Tile *>> & vMap, int row, int col)
 	else if (vMap[row][col]->getSymbol() == '>') {vMap[row][col]->setSymbol('^');}
 
 	//Now call this function on all adjacent tiles
-	//Use a counter so we can control the break and protect against out of bounds indices access
-	int outCounter = 0;
-	int j = row - 1;
-	while (outCounter <= 3)
-	{
-		//Need to make sure we don't check out of bounds indices
-		//For now, to avoid global variable and to amke it easy we will use hard limits on the size and height instead of passing
-		//the requirements (because we will use only one size for this assignment.
-		if (j < 0) {j = 0; outCounter++;}
-		else if (j >= 20) {j = 20 - 1; outCounter++;}
-
-		//Use a counter so we can control the break and protect against out of bounds indices access
-		int inCounter = 0;
-		int i = col - 1;
-		while (inCounter <= 3)
-		{
-			//Need to make sure we don't check out of bounds indices
-			if (i < 0) {i = 0; inCounter++;}
-			else if (i >= 79) {i = 79 - 1; inCounter++;}
-
-			//Call the function recursively
-			recurseMark(vMap, j, i);
-
-			i++;
-			inCounter++;
-		}
-
-		j++;
-		outCounter++;
-	}
+	recurseMark(vMap, row - 1, col);
+	recurseMark(vMap, row + 1, col);
+	recurseMark(vMap, row, col - 1);
+	recurseMark(vMap, row, col + 1);
 }
 
-//Modified recurseMark that only marks the room tiles and stairs and counts while it does it. Then returns the integer, representing the number of tiles in the room
+//Modified recurseMark that only marks the room tiles and stairs and counts while it does it. Count is the number of tiles in the room
 void recurseCount(vector<vector<Tile *>> & vMap, int row, int col, int & count)
 {
 	//Ending condition
+	//Check if oob
+	if (row < 0 || col < 0 || row >= vMap.size() || col >= vMap[0].size()) {return;}
+
+	//Check if already marked or space we don't want to mark
 	if (vMap[row][col]->getSymbol() == ' ' || vMap[row][col]->getSymbol() == 'X' || vMap[row][col]->getSymbol() == '#' || vMap[row][col]->getSymbol() == '^' || vMap[row][col]->getSymbol() == '_') {return;}
 
 	//Mark the tile
@@ -91,111 +73,49 @@ void recurseCount(vector<vector<Tile *>> & vMap, int row, int col, int & count)
 	else if (vMap[row][col]->getSymbol() == '>') {vMap[row][col]->setSymbol('^'); count++;}
 
 	//Now call this function on all adjacent tiles
-	//Use a counter so we can control the break and protect against out of bounds indices access
-	int outCounter = 0;
-	int j = row - 1;
-	while (outCounter <= 3)
-	{
-		//Need to make sure we don't check out of bounds indices
-		//For now, to avoid global variable and to amke it easy we will use hard limits on the size and height instead of passing
-		//the requirements (because we will use only one size for this assignment.
-		if (j < 0) {j = 0; outCounter++;}
-		else if (j >= 20) {j = 20 - 1; outCounter++;}
-
-		//Use a counter so we can control the break and protect against out of bounds indices access
-		int inCounter = 0;
-		int i = col - 1;
-		while (inCounter <= 3)
-		{
-			//Need to make sure we don't check out of bounds indices
-			if (i < 0) {i = 0; inCounter++;}
-			else if (i >= 79) {i = 79 - 1; inCounter++;}
-
-			//Call the function recursively
-			if (j != row && i != col) {recurseCount(vMap, j, i, count);}
-
-			i++;
-			inCounter++;
-		}
-
-		j++;
-		outCounter++;
-	}
+	recurseCount(vMap, row - 1, col, count);
+	recurseCount(vMap, row + 1, col, count);
+	recurseCount(vMap, row, col - 1, count);
+	recurseCount(vMap, row, col + 1, count);
 }
 
-void overlapRecurse(vector<vector<Tile *>> & vMap, int row, int col, int & count, int & vIndex, vector<char> & symbols, int & roomWidth, int & roomHeight)
+void overlapRecurse(vector<vector<Tile *>> & vMap, int row, int col, int & count, int & roomWidth, int & roomHeight)
 {
+	//Ending condition
+	//Check if oob
+	if (row < 0 || col < 0 || row >= vMap.size() || col >= vMap[0].size()) {return;}
+
+	//Check if already marked or space we don't want to mark
+	char sym = vMap[row][col]->getSymbol();
+	if (sym == ' ' || sym == '#' || sym == '^' || sym == '_' || sym == 'X') {return;}
+
 	//Initial check on how wide and tall the room is (used for rectangular test)
 	if (roomWidth == 0)
 	{
 		int newCol = col;
 		int newRow = row;
-		while (vMap[row][newCol]->getSymbol() == '.')
+		while (vMap[row][newCol]->getSymbol() == '.' || vMap[row][newCol]->getSymbol() == '<' || vMap[row][newCol]->getSymbol() == '>')
 		{
 			roomWidth++;
 			newCol++;
 		}
 
-		while (vMap[newRow][col]->getSymbol() == '.')
+		while (vMap[newRow][col]->getSymbol() == '.' || vMap[newRow][col]->getSymbol() == '<' || vMap[newRow][col]->getSymbol() == '>')
 		{
 			roomHeight++;
 			newRow++;
 		}
 	}
 
-	//Ending condition
-	char sym = vMap[row][col]->getSymbol();
-	if (sym == ' ' || sym == '#' || sym == '^' || sym == '_' || sym == symbols[vIndex]) {return;}
-
 	//Mark the tile
-	if (vMap[row][col]->getSymbol() == '.') {vMap[row][col]->setSymbol(symbols[vIndex]); count++;}
-	else if (vMap[row][col]->getSymbol() == '<') {vMap[row][col]->setSymbol(symbols[vIndex]); count++;}
-	else if (vMap[row][col]->getSymbol() == '>') {vMap[row][col]->setSymbol(symbols[vIndex]); count++;}
-	//To check for overlaps, we must now have all possible room marks as tiles we mark (so the marking will overlap)
-	else
-	{
-		for (int i = 0; i < symbols.size(); i++)
-		{
-			if (vMap[row][col]->getSymbol() == symbols[i])
-			{
-				vMap[row][col]->setSymbol(symbols[vIndex]);
-				count++;
-			}
-		}
-	}
+	if (vMap[row][col]->getSymbol() == '.') {vMap[row][col]->setSymbol('X'); count++;}
+	else if (vMap[row][col]->getSymbol() == '<') {vMap[row][col]->setSymbol('_'); count++;}
+	else if (vMap[row][col]->getSymbol() == '>') {vMap[row][col]->setSymbol('^'); count++;}
 
-
-	//Now call this function on all adjacent tiles
-	//Use a counter so we can control the break and protect against out of bounds indices access
-	int outCounter = 0;
-	int j = row - 1;
-	while (outCounter <= 3)
-	{
-		//Need to make sure we don't check out of bounds indices
-		//For now, to avoid global variable and to amke it easy we will use hard limits on the size and height instead of passing
-		//the requirements (because we will use only one size for this assignment.
-		if (j < 0) {j = 0; outCounter++;}
-		else if (j >= 20) {j = 20 - 1; outCounter++;}
-
-		//Use a counter so we can control the break and protect against out of bounds indices access
-		int inCounter = 0;
-		int i = col - 1;
-		while (inCounter <= 3)
-		{
-			//Need to make sure we don't check out of bounds indices
-			if (i < 0) {i = 0; inCounter++;}
-			else if (i >= 79) {i = 79 - 1; inCounter++;}
-
-			//Call the function recursively
-			if (j != row && i != col) {overlapRecurse(vMap, j, i, count, vIndex, symbols, roomWidth, roomHeight);}
-
-			i++;
-			inCounter++;
-		}
-
-		j++;
-		outCounter++;
-	}
+	overlapRecurse(vMap, row - 1, col, count, roomWidth, roomHeight);
+	overlapRecurse(vMap, row + 1, col, count, roomWidth, roomHeight);
+	overlapRecurse(vMap, row, col - 1, count, roomWidth, roomHeight);
+	overlapRecurse(vMap, row, col + 1, count, roomWidth, roomHeight);
 }
 
 /* UNIT TEST
@@ -213,6 +133,8 @@ bool unitTest(DungeonLevel dl)
 	{
 		cout << endl << "Floor: " << floor << endl;
 		vector<vector<Tile *>> map = vFloors[floor]->getMap();
+
+		printMap(map);
 
 		//DUNGEON SIZE TEST
 		cout << "Dungeon Size Test:" << endl;
@@ -282,13 +204,20 @@ bool unitTest(DungeonLevel dl)
 		//First iterate through and find a room tile
 		cout << "Room Passability Test:" << endl;
 
+		int startRow = -1;
+		int startCol = -1;
+
 		for (int row = 0; row < map.size(); row++)
 		{
 			for (int col = 0; col < map[row].size(); col++)
 			{
-				if (map[row][col]->getSymbol() == '.') {recurseMark(map, row, col);}
+				if (map[row][col]->getSymbol() == '.' || map[row][col]->getSymbol() == '#')
+				{
+					if (startRow == -1) {startRow = row; startCol = col;}
+				}
 			}
 		}
+		recurseMark(map, startRow, startCol);
 
 		//Now check if there are any room tiles left, if so we fail
 		bool passTest = true;
@@ -306,7 +235,6 @@ bool unitTest(DungeonLevel dl)
 		//ROOM MINIMUM SIZE TEST
 		//Will iterate over a map until we find a room tile. Then we Will use a recursive function to count each
 		//room tile and mark them. Then the function will continue to look for room tiles and do the same for each room.
-		//It'll return a count of the room with the fewest tiles
 		resetMap(map);
 
 		bool passSize = true;
@@ -329,41 +257,19 @@ bool unitTest(DungeonLevel dl)
 		else {cout << "Room Size Test Passed!" << endl;}
 
 		//OVERLAP TEST AND RECTANGULAR TEST
-		/*This is the most complicated of all the unit tests. The idea is similar to the count algorithm I used in the room size test.
-		The idea is that I will mark a room with a symbol, then use a vector to keep count of the symbol. We will then switch
-		swymbols for the next room to be marked and mark it and count. (will use a vector of size 6 with different symbols and simply iterate
-		through that). Then after all rooms have been marked with their respective symbols, we will iterate through all tiles and use a new
-		vector to keep track of counts. Each time we see a symbol we increment the corresponding count
-		of that symbol (similar to building a histogram for counting sort). Finally we can check the counts of the symbolds in the vector we know is
-		correct to  those of the new vector. If the rooms don't overlap the counts will be the same.*/
+		/*The overlap test is predicated on there being 6 rooms in the dungeon. We assume that if there are less rooms then there must be an overlap.
+			We use a recursive algorithm that marks the rooms only (not the tunnels) and a simple count to see how many rooms are in the dungeon.
+			
+			For the rectangular test we find the height and width of the room (from the top left corner of the room). We also calculate a count from the
+			room using our recursive marking algorithm. We then check that the count divided by the width is equal to the height that we have found. If it
+			doesn't, then the room is not a rectangle.*/
 		resetMap(map);
 
 		cout << "Room Overlap Test:" << endl;
 
-		//Initialize the necessary containers
-		vector<char> symbols;
-		symbols.push_back('!');
-		symbols.push_back('@');
-		symbols.push_back('$');
-		symbols.push_back('%');
-		symbols.push_back('&');
-		symbols.push_back('*');
-		vector<int> vCount;
-		vCount.push_back(0);
-		vCount.push_back(0);
-		vCount.push_back(0);
-		vCount.push_back(0);
-		vCount.push_back(0);
-		vCount.push_back(0);
-		vector<int> vNewCount;
-		vNewCount.push_back(0);
-		vNewCount.push_back(0);
-		vNewCount.push_back(0);
-		vNewCount.push_back(0);
-		vNewCount.push_back(0);
-		vNewCount.push_back(0);
-		int vIndex = 0;
+		int numRooms = 0;
 		bool isRectangular = true;
+		bool overlapPass = true;
 		
 		for (int row = 0; row < map.size(); row++)
 		{
@@ -374,9 +280,8 @@ bool unitTest(DungeonLevel dl)
 				int roomHeight = 0;
 				if (map[row][col]->getSymbol() == '.' || map[row][col]->getSymbol() == '<' || map[row][col]->getSymbol() == '>')
 				{
-					overlapRecurse(map, row, col, iCount, vIndex, symbols, roomWidth, roomHeight);
-					vCount[vIndex] = iCount;
-					vIndex++;
+					overlapRecurse(map, row, col, iCount, roomWidth, roomHeight);
+					numRooms++;
 
 					//Now check if room is rectangular
 					double dCalc = (iCount / roomWidth);
@@ -389,34 +294,7 @@ bool unitTest(DungeonLevel dl)
 			}
 		}
 
-		//Now we must loop over all tiles and get the new count
-		for (int row = 0; row < map.size(); row++)
-		{
-			for (int col = 0; col < map[row].size(); col++)
-			{
-				if (map[row][col]->getSymbol() != ' ' && map[row][col]->getSymbol() != '#')
-				{
-					//Increment count for correct symbols
-					char sym = map[row][col]->getSymbol();
-					if (sym == '!') {vNewCount[0] = vNewCount[0] + 1;}
-					else if (sym == '@') {vNewCount[1] = vNewCount[1] + 1;}
-					else if (sym == '$') {vNewCount[2] = vNewCount[2] + 1;}
-					else if (sym == '%') {vNewCount[3] = vNewCount[3] + 1;}
-					else if (sym == '&') {vNewCount[4] = vNewCount[4] + 1;}
-					else if (sym == '*') {vNewCount[5] = vNewCount[5] + 1;}
-				}
-			}
-		}
-
-		//Now check if the new counts match
-		bool overlapPass = true;
-		for (int i = 0; i < symbols.size(); i++)
-		{
-			if (vCount[i] != vNewCount[i])
-			{
-				overlapPass = false;
-			}
-		}
+		if (numRooms < 6) {overlapPass = false;}
 
 		if (!overlapPass) {passed = false; cout << "Room Overlap Test Failed: One or more rooms overlap each other!" << endl;}
 		else {cout << "Room Overlap Test Passed!" << endl;}
